@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="cs">
+<head>
+  <title>Udapi Tutorial</title>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <!--<link rel="icon" href="favicon.png">-->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+  <style type="text/css">
+pre {
+  font-size: 9pt;
+  font-family: "DejaVu Sans Mono", "Bitstream Vera Sans Mono", monospace;
+  background: #000;
+  color: #ccd;
+  padding: 0.5em;
+  border: 1px solid #444;
+  -moz-border-radius-bottomleft: 7px;
+  -moz-border-radius-bottomright: 7px;
+  -moz-border-radius-topleft: 7px;
+  -moz-border-radius-topright: 7px;
+}
+summary {border: outset; padding: 2px; display: inline-block; margin-bottom: 5px;}
+</style>
+
+</head>
+<body>
+
+<div class="container" style="height:140px;">
+  <h1 class="text-center">Udapi Tutorial</h1>
+  <p class="text-center">by <a href="http://ufal.mff.cuni.cz/martin-popel">Martin Popel</a></p>
+</div>
+<br>
+
+<div class="container">
+<div class="row">
+
+<div id="intro" class="oddil">
+<p>Udapi is an API and framework for processing <a href="http://universaldependencies.org/">Universal Dependencies</a>
+available for Python, Perl and Java.
+This tutorial uses the Python version and expects Linux+Bash and Python 3.3 or higher.
+</p>
+<p>You can download my <a href="http://ufal.mff.cuni.cz/~popel/papers/2017_03_13_working_with_ud.pdf">slides about UD and Udapi</a>.</p>
+</div>
+
+<h3>Step 1: Install Udapi</h3>
+Follow the instructions at <a href="https://github.com/udapi/udapi-python">https://github.com/udapi/udapi-python</a>
+<details>
+<summary>Solution</summary>
+<pre>
+pip3 install --user --upgrade git+https://github.com/udapi/udapi-python.git
+export PATH="$HOME/.local/bin/:$PATH"
+</pre>
+</details>
+
+<h3>Step 2: Download sample data</h3>
+Download and extract <a href="http://ufal.mff.cuni.cz/~popel/udapi/ud14sample.tgz">ud14sample.tgz</a>.
+There are just 10 sentences for each language plus one bigger file (<code>dev.conllu</code>) for English.
+For full UDv1.4 go to <a href="http://hdl.handle.net/11234/1-1827">Lindat</a>.
+<details><summary>Solution</summary>
+<pre>
+wget http://ufal.mff.cuni.cz/~popel/udapi/ud14sample.tgz
+tar -xf ud14sample.tgz
+cd sample
+</pre>
+</details>
+
+<h3>Step 3: Browse your favorite language</h3>
+Use the <code>udapy</code> commands from my slides.
+<details><summary>Solution</summary>
+<pre>
+cat */sample.conllu | udapy -T | less -R
+</pre>
+<p>This concatenates all languages and pipes them to <code>udapy</code>
+and then to <code>less</code> (type <code>q</code> to exit).
+You can use e.g. <code>UD_English</code> instead of <code>*</code>.
+The <code>-R</code> option tells <code>less</code> to display colors (instead of their ANSI codes).
+</p>
+<p>The <code>-T</code> prints the trees in text mode
+and it is actually a shortcut for <code>udapy write.TextModeTrees color=1</code>.
+Run <code>udapy --help</code> to see other useful shortcuts, e.g.
+<pre>
+cat UD_English/sample.conllu | udapy -H &gt; en.html
+</pre>
+will create a html version, you can open in any modern browser.
+<code>-HA</code> will include all the nodes' attributes in the html output.
+</p>
+</details>
+
+<h3>Step 4: Find out what does the <i>discourse</i> deprel (dependency relation) mean</h3>
+<p><b>OptionA</b>: search the <a href="http://universaldependencies.org/">documentation</a>.</p>
+<details><summary>Solution</summary>
+<p>see the documentation of <a href="http://universaldependencies.org/u/dep/discourse.html">discourse deprel</a></p>
+</details>
+
+<p><b>OptionB</b>: browse <code>UD_English/dev.conllu</code> as in the previous step and find the occurences of discourse.</p>
+<details><summary>Solution</summary>
+<pre>
+udapy -T &lt; UD_English/dev.conllu | less -R
+</pre>
+In the less
+</details>
+
+
+<p><b>OptionC</b>: extract all word forms and UPOS tags of nodes
+annotated with the <i>discourse</i> deprel in <code>UD_English/dev.conllu</code>.
+Hints: use <code>udapy util.Eval node='<i>PYTHON_CODE</i>'</code>
+and substitute <code><i>PYTHON_CODE</i></code> with a code
+which should use <code>node.deprel</code>, <code>node.form</code> and <code>node.upos</code>.
+The standard Unix way of frequency analysis is <code>sort | uniq -c | sort -rn</code>.
+</p>
+<details><summary>Solution</summary>
+<pre>
+udapy util.Eval node='if node.deprel == "discourse": print(node.form, node.upos)' &lt; dev.conllu &gt; disc.txt
+cat disc.txt | sort | uniq -c | sort -rn | less
+</pre>
+</details>
+
+  <h2 class="text-center"><small>TextLink training school, Prague, February 9, 2017</small></h2>
+</div></div>
+</body>
+</html>
