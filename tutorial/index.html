@@ -45,7 +45,7 @@ This tutorial uses the Python version and expects Linux+Bash and Python 3.3 or h
 </div>
 
 <h3>Step 1: Install Udapi</h3>
-Follow the instructions at <a href="https://github.com/udapi/udapi-python">https://github.com/udapi/udapi-python</a>
+Follow the instructions at <a href="https://github.com/udapi/udapi-python">https://github.com/udapi/udapi-python</a>.
 <details>
 <summary>Solution</summary>
 <pre>
@@ -55,13 +55,13 @@ export PATH="$HOME/.local/bin/:$PATH"
 </details>
 
 <h3>Step 2: Download sample data</h3>
-Download and extract <a href="http://ufal.mff.cuni.cz/~popel/udapi/ud14sample.tgz">ud14sample.tgz</a>.
-There are just 10 sentences for each language plus one bigger file (<code>dev.conllu</code>) for English.
-For full UDv1.4 go to <a href="http://hdl.handle.net/11234/1-1827">Lindat</a>.
+Download and extract <a href="http://ufal.mff.cuni.cz/~popel/udapi/ud20sample.tgz">ud20sample.tgz</a>.
+There are just 100 sentences for each language plus two bigger files (<code>train.conllu</code> and <code>dev.conllu</code>) for English and Czech.
+For full UDv2.0 go to <a href="http://hdl.handle.net/11234/1-1983">Lindat</a>.
 <details><summary>Solution</summary>
 <pre>
-wget http://ufal.mff.cuni.cz/~popel/udapi/ud14sample.tgz
-tar -xf ud14sample.tgz
+wget http://ufal.mff.cuni.cz/~popel/udapi/ud20sample.tgz
+tar -xf ud20sample.tgz
 cd sample
 </pre>
 </details>
@@ -70,12 +70,11 @@ cd sample
 Use the <code>udapy</code> commands from my slides.
 <details><summary>Solution</summary>
 <pre>
-cat */sample.conllu | udapy -T | less -R
+cat UD_Ancient_Greek/sample.conllu | udapy -T | less -R
 </pre>
-<p>This concatenates all languages and pipes them to <code>udapy</code>
-and then to <code>less</code> (type <code>q</code> to exit).
-You can use e.g. <code>UD_English</code> instead of <code>*</code>.
+<p>
 The <code>-R</code> option tells <code>less</code> to display colors (instead of their ANSI codes).
+Type <code>q</code> to exit.
 </p>
 <p>The <code>-T</code> prints the trees in text mode
 and it is actually a shortcut for <code>udapy write.TextModeTrees color=1</code>.
@@ -99,7 +98,8 @@ will create a html version, you can open in any modern browser.
 <pre>
 udapy -T &lt; UD_English/dev.conllu | less -R
 </pre>
-In the less
+Now use regex search integrated in <code>less</code>, i.e. type <code>/discourse</code>
+and then press <code>n</code> to jump to the next occurence.
 </details>
 
 
@@ -117,7 +117,6 @@ cat disc.txt | sort | uniq -c | sort -rn | less
 </pre>
 </details>
 
-  <h2 class="text-center"><small>TextLink training school, Prague, February 9, 2017</small></h2>
 </div></div>
 </body>
 </html>
